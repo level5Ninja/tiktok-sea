@@ -37,13 +37,16 @@ y = df['churn']
 
 cat_cols = ['region','gender','os','age_level','media_source','device_level']
 
-cat_cols = ['region','gender','os','age_level','media_source','device_level']
+
 
 for col in cat_cols:
     le = LabelEncoder()
     X[col] = le.fit_transform(X[col].astype(str))  # 转成str再做编码
 
 #print("\n特征 X 的维度：", X.shape)
+
+
+
 
 
 X_train, X_test, y_train, y_test = train_test_split(
@@ -74,7 +77,6 @@ tree_clf.fit(X_train, y_train)
 
 y_pred_proba_tree = tree_clf.predict_proba(X_test)[:, 1]
 y_pred_tree = tree_clf.predict(X_test)
-
 
 
 # 逻辑回归
