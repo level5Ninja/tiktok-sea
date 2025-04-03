@@ -67,5 +67,5 @@ for col in subgroup_columns:
         plt.xlabel(col)
         plt.ylabel("dif in mean")
         plt.axhline(0, color='black', linestyle='--', linewidth=1)
-        plt.show()"
+        plt.show()
         
