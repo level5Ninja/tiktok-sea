@@ -53,9 +53,9 @@ X_train, X_test, T_train, T_test, Y_train, Y_test = train_test_split(
 # 初始化并训练因果树模型
 ct = CausalTreeRegressor(
     random_state=42,
-    max_depth=5,            # 控制树的深度
+    max_depth=7,            # 控制树的深度
     min_samples_split=30,   # 允许较低的分裂门槛以捕捉异质性
-    min_samples_leaf=30,    # 使叶节点更小，捕捉细分群体
+    min_samples_leaf=50,    # 使叶节点更小，捕捉细分群体
     alpha=0.05,             # 可以尝试不同 alpha 值
     groups_penalty=0.7      # 针对样本不平衡的惩罚力度
 )# 注意：fit 方法需要 numpy 数组，因此使用 .values 进行转换

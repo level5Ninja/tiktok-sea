@@ -6,6 +6,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import roc_auc_score, precision_score, recall_score
+from xgboost import XGBClassifier
 
 
 
@@ -68,9 +69,9 @@ y_pred_log = log_clf.predict(X_test)
 
 
 tree_clf = DecisionTreeClassifier(
-    max_depth=5, 
-    min_samples_split=50, 
-    min_samples_leaf=20, 
+    max_depth=15, 
+    min_samples_split=25, 
+    min_samples_leaf=10, 
     random_state=2023
 )
 tree_clf.fit(X_train, y_train)
@@ -114,3 +115,36 @@ feature_importances_tree = pd.DataFrame({
 
 print("\n决策树特征重要性：")
 print(feature_importances_tree)
+
+# XGBoost 模型训练与评价
+xgb_clf = XGBClassifier(
+    max_depth=15, 
+    learning_rate=0.1, 
+    n_estimators=100,
+    subsample=0.8,
+    colsample_bytree=0.8,
+    random_state=2023,
+    use_label_encoder=False,
+    eval_metric='logloss'
+)
+xgb_clf.fit(X_train, y_train)
+
+y_pred_proba_xgb = xgb_clf.predict_proba(X_test)[:, 1]
+y_pred_xgb = xgb_clf.predict(X_test)
+
+auc_xgb = roc_auc_score(y_test, y_pred_proba_xgb)
+precision_xgb = precision_score(y_test, y_pred_xgb)
+recall_xgb = recall_score(y_test, y_pred_xgb)
+
+print("\n=== XGBoost评价 ===")
+print(f"AUC: {auc_xgb:.4f}")
+print(f"Precision: {precision_xgb:.4f}")
+print(f"Recall: {recall_xgb:.4f}")
+
+feature_importances_xgb = pd.DataFrame({
+    'Feature': feature_cols,
+    'Importance': xgb_clf.feature_importances_
+}).sort_values(by='Importance', ascending=False)
+
+print("\nXGBoost特征重要性：")
+print(feature_importances_xgb)
